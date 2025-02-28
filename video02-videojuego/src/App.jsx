@@ -15,8 +15,8 @@ function App() {
 
   const [turn, setTurn] = useState(() => {
     const turnFormStorage = window.localStorage.getItem('turn')
-    return turnFormStorage ?? TURNS.X
-  })
+    return turnFormStorage ?? TURNS.X 
+    })
 
   const [winner, setWinner] = useState(null)
 
