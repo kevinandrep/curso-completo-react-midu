@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react'
 import './App.css'
-
-const CAT_ENDPOINT_RANDOM_FACT = 'https://catfact.ninja/fact'
-// const CAT_ENDPOINT_IMAGE_URL = `https://cataas.com/cat/says/${firstWord}?fontSize=50&fontColor=red&json=true`
+import { getRandomFact } from './services/facts'
 
 export function App () {
   const [fact, setFact] = useState()
@@ -10,12 +8,7 @@ export function App () {
 
   // efecto para recuperar la cita textual de la api al cargar
   useEffect(() => {
-    fetch(CAT_ENDPOINT_RANDOM_FACT)
-      .then(res => res.json())
-      .then(data => {
-        const { fact } = data
-        setFact(fact)
-      })
+    getRandomFact().then(newFact => setFact(newFact))
   }, [])
 
   // efecto para recuperar cada vez que se tenga una cita nueva
@@ -32,9 +25,17 @@ export function App () {
         setImageUrl(url)
       })
   }, [fact])
+
+  const handleClick = async () => {
+    const newFact = await getRandomFact()
+    setFact(newFact)
+    getRandomFact()
+  }
+
   return (
     <main>
       <h1>App de gatitos</h1>
+      <button onClick={handleClick}>Get new Cat</button>
       {fact && <p>{fact}</p>}
       {imageUrl && <img src={imageUrl} alt='cat' />}
     </main>
