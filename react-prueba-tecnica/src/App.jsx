@@ -1,35 +1,13 @@
-import { useEffect, useState } from 'react'
 import './App.css'
-import { getRandomFact } from './services/facts'
+import { useCatImage } from './hooks/useCatimage'
+import { useCatFact } from './hooks/useCatFact'
 
 export function App () {
-  const [fact, setFact] = useState()
-  const [imageUrl, setImageUrl] = useState()
-
-  // efecto para recuperar la cita textual de la api al cargar
-  useEffect(() => {
-    getRandomFact().then(newFact => setFact(newFact))
-  }, [])
-
-  // efecto para recuperar cada vez que se tenga una cita nueva
-
-  useEffect(() => {
-    if (!fact) return
-    const threeFirstWords = fact.split(' ', 3).join(' ')
-    console.log(threeFirstWords)
-
-    fetch(`https://cataas.com/cat/says/${threeFirstWords}?fontSize=50&fontColor=red&json=true`)
-      .then(res => res.json())
-      .then(response => {
-        const { url } = response
-        setImageUrl(url)
-      })
-  }, [fact])
+  const { fact, refreshFact } = useCatFact()
+  const { imageUrl } = useCatImage({ fact })
 
   const handleClick = async () => {
-    const newFact = await getRandomFact()
-    setFact(newFact)
-    getRandomFact()
+    refreshFact()
   }
 
   return (
