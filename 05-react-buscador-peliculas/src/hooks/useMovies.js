@@ -1,8 +1,15 @@
-import responseMovies from '../mocks/with-results.json'
+import { useState } from 'react'
+import withResults from '../mocks/with-results.json'
+import withoutResults from '../mocks/no-results.json'
 
-export function useMovies () {
-    // mapeando la variable movies para rescindir del contrato json
-    const movies = responseMovies.Search
+export function useMovies ({search}) {
+    
+  const [responseMovies, setResponseMovies] = useState([])
+  
+  const movies = responseMovies.Search
+
+  //mapeando la variable movies para rescindir del contrato json
+
     const mappedMovies = movies?.map(movie => ({
       id: movie.imdbID,
       title: movie.Title,
@@ -10,5 +17,19 @@ export function useMovies () {
       poster: movie.Poster
     }))
 
-    return {movies: mappedMovies}
+    const getMovies = () => {
+      if (search) {
+        //setResponseMovies(withResults)
+        fetch(`https://www.omdbapi.com/?apikey=4287ad07&s=${search}`)
+          .then(res => res.json())
+          .then(json => {
+            setResponseMovies(json)
+          })
+      } else {
+        setResponseMovies(withoutResults)
+      }
+    }
+
+    return {movies: mappedMovies, getMovies}
 }
+

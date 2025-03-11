@@ -40,11 +40,10 @@ function useSerarch () {
   return {search, updateSearch, error}
 }
 
-
 function App() {
 
-  const {movies} = useMovies()
   const {search, updateSearch, error} = useSerarch()
+  const {movies, getMovies} = useMovies({search})
  
   const handleChange = (event) => {
     updateSearch(event.target.value)
@@ -52,8 +51,8 @@ function App() {
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    const fields = Object.fromEntries(new window.FormData(event.target))
-    console.log(fields)
+    getMovies()
+    
 
 
   }
